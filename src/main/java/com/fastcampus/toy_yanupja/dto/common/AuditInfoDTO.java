@@ -1,4 +1,4 @@
-package com.fastcampus.toy_yanupja.dto;
+package com.fastcampus.toy_yanupja.dto.common;
 
 import lombok.*;
 

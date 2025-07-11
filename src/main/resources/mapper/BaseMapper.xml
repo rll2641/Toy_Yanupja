@@ -13,16 +13,16 @@
 
     <!-- INSERT 시 값 바인딩 -->
     <sql id="Base_System_Column_Insert">
-        #{createdAt},
-        #{updatedAt},
-        #{createdBy},
-        #{updatedBy}
+        NOW(),
+        NULL,
+        #{auditInfoDTO.createdBy},
+        NULL
     </sql>
 
     <!-- UPDATE 시 SET 절 -->
     <sql id="Base_System_Column_Update">
         UPDATED_AT = now(),
-        UPDATED_BY = #{updatedBy}
+        UPDATED_BY = #{auditInfoDTO.updatedBy}
     </sql>
 
     <!-- 페이지네이션 공통 조건 -->

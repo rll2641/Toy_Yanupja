@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 숙소 관련 매퍼 -->
+<mapper namespace="com.fastcampus.toy_yanupja.mapper.accomm.AccommMapper">
+
+    <!-- PK 제외, 숙소 컬럼 -->
+    <sql id="Accomm_Column">
+        SELLER_ID,
+        ADMIN_ID,
+        ACCOMMODATION_CATEGORY_L1_ID,
+        ACCOMMODATION_CATEGORY_L2_ID,
+        ACCOMMODATION_CATEGORY_L3_ID,
+        ACCOMMODATION_NAME,
+        ACCOMMODATION_STATUS,
+        CLICK_VIEWS,
+        RATING,
+        PROVINCE_NAME,
+        DISTRICT_NAME,
+        ROAD_NAME,
+        BUILDING_NUMBER,
+        BUILDING_SUB_NUMBER,
+    </sql>
+
+    <insert id="insert" parameterType="AccommDTO">
+        INSERT INTO ACCOMMODATION (
+            <include refid="Accomm_Column"/>
+            <include refid="com.fastcampus.toy_yanupja.mapper.BaseMapper.Base_System_Column"/>)
+        VALUES (
+            #{sellerId},
+            #{adminId},
+            #{accommodationCategoryL1Id},
+            #{accommodationCategoryL2Id},
+            #{accommodationCategoryL3Id},
+            #{accommodationName},
+            #{accommodationStatus},
+            #{clickViews},
+            #{rating},
+            #{provinceName},
+            #{districtName},
+            #{roadName},
+            #{buildingNumber},
+            #{buildingSubNumber},
+            <include refid="com.fastcampus.toy_yanupja.mapper.BaseMapper.Base_System_Column_Insert"/>)
+    </insert>
+
+    <update id="update" parameterType="AccommDTO">
+        UPDATE ACCOMMODATION
+        SET
+            <set>
+                <if test="sellerId != null">SELLER_ID = #{sellerId},</if>
+                <if test="adminId != null">ADMIN_ID = #{adminId},</if>
+                <if test="accommodationName != null and accommodationName.trim().length() > 0"> ACCOMMODATION_NAME = #{accommodationName},</if>
+                <if test="accommodationStatus != null">ACCOMMODATION_STATUS = #{accommodationStatus},</if>
+                <if test="clickViews != null">CLICK_VIEWS = #{clickViews},</if>
+                <if test="rating != null">RATING = #{rating},</if>
+                <if test="provinceName != null">PROVINCE_NAME = #{provinceName},</if>
+                <if test="districtName != null">DISTRICT_NAME = #{districtName},</if>
+                <if test="roadName != null">ROAD_NAME = #{roadName},</if>
+                <if test="buildingNumber != null">BUILDING_NUMBER = #{buildingNumber},</if>
+                <if test="buildingSubNumber != null">BUILDING_SUB_NUMBER = #{buildingSubNumber}</if>
+            </set>
+        WHERE ACCOMMODATION_ID = #{accommodationId}
+    </update>
+
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM ACCOMMODATION
+        WHERE ACCOMMODATION_ID = #{accommodationId}
+    </delete>
+
+    <select id="selectById" parameterType="Long" resultType="AccommDTO">
+        SELECT * FROM ACCOMMODATION WHERE ACCOMMODATION_ID = #{accommodationId}
+    </select>
+
+    <select id="selectAll" resultType="AccommDTO">
+        SELECT * FROM ACCOMMODATION
+    </select>
+
+    <select id="selectByPage" parameterType="PageDTO" resultType="AccommDTO">
+        SELECT
+            ACCOMMODATION_ID,
+            <include refid="Accomm_Column"/>
+            <include refid="com.fastcampus.toy_yanupja.mapper.BaseMapper.Base_System_Column"/>
+        FROM ACCOMMODATION
+        <choose>
+            <when test="orderBy != null and orderBy.trim().length() > 0">
+                ORDER BY
+                    <choose>
+                        <when test="orderBy == 'name'">ACCOMMODATION_NAME</when>
+                        <when test="orderBy == 'rating'">RATING</when>
+                        <when test="orderBy == 'views'">CLICK_VIEWS</when>
+                        <otherwise>ACCOMMODATION_ID</otherwise>
+                    </choose>
+                <if test="orderDirection != null and orderDirection.trim().length() > 0">
+                    ${pageDTO.orderDirection}
+                </if>
+            </when>
+            <otherwise>
+                ORDER BY ACCOMMODATION_ID DESC
+            </otherwise>
+        </choose>
+        LIMIT #{pageDTO.limit} OFFSET #{pageDTO.offset}
+    </select>
+
+</mapper>

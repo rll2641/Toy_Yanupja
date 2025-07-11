@@ -2,7 +2,9 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+
 <header>
+
     <div class="logo">
         <a href="${pageContext.request.contextPath}/" style="text-decoration: none; color: inherit;">
             야눕자
@@ -10,7 +12,7 @@
     </div>
 
     <div class="search-bar">
-        <input type="text" id=searchInput placeholder="신나는 토요일 불타는 이 밤" />
+        <input type="text" id=searchInput placeholder="호텔 이름, 지역으로 검색해주세요" />
     </div>
 
     <div class="header-right">
@@ -18,11 +20,11 @@
         <c:if test="${empty sessionScope.loginCustomer}">
             <div class="auth-links">
                 <a href="${pageContext.request.contextPath}/customer/login" class="icon-link">
-                    <img src="${pageContext.request.contextPath}/resources/image/login_image.png" alt="로그인" />
+                    <img src="${pageContext.request.contextPath}/resources/images/header/login_image.png" alt="로그인" />
                     <span>로그인</span>
                 </a>
                 <a href="${pageContext.request.contextPath}/customer" class="icon-link">
-                    <img src="${pageContext.request.contextPath}/resources/image/signup_image.png" alt="회원가입" />
+                    <img src="${pageContext.request.contextPath}/resources/images/header/signup_image.png" alt="회원가입" />
                     <span>회원가입</span>
                 </a>
             </div>
@@ -45,7 +47,7 @@
         <div>
             <%-- 예약 내역 링크 --%>
             <a href="${pageContext.request.contextPath}/orders" class="icon-link">
-                <img src="${pageContext.request.contextPath}/resources/image/clipboard.png" alt="예약 내역" /> <%-- 장바구니와 동일한 이미지 사용 --%>
+                <img src="${pageContext.request.contextPath}/resources/images/header/reservation.png" alt="예약 내역" /> <%-- 장바구니와 동일한 이미지 사용 --%>
                 <span>예약 내역</span>
             </a>
         </div>

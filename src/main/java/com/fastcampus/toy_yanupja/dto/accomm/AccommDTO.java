@@ -1,6 +1,6 @@
 package com.fastcampus.toy_yanupja.dto.accomm;
 
-import com.fastcampus.toy_yanupja.dto.AuditInfoDTO;
+import com.fastcampus.toy_yanupja.dto.common.AuditInfoDTO;
 import com.fastcampus.toy_yanupja.dto.accomm.enums.AccommodationStatus;
 import lombok.*;
 

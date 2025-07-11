@@ -20,6 +20,11 @@
         <!-- <typeAlias alias="User" type="com.fastcampus.domain.User"/> -->
     </typeAliases>
 
+    <!-- TypeHandler 적용 -->
+    <typeHandlers>
+        <typeHandler handler="com.fastcampus.toy_yanupja.common.handler.status.AccommStatusTypeHandler"/>
+    </typeHandlers>
+
     <!-- 매퍼 등록 -->
     <mappers>
         <package name="com.fastcampus.toy_yanupja.mapper"/>

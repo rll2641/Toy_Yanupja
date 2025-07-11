@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -37,15 +37,15 @@
         <!-- 카테고리 박스 영역 -->
         <div class="category-boxes">
             <a href="${pageContext.request.contextPath}/domestic" class="category-box">
-                <img src="${pageContext.request.contextPath}/resources/image/hotel1.png" alt="국내숙소" />
+                <img src="${pageContext.request.contextPath}/resources/images/hotel/main/domestic_hotel.jpg" alt="국내숙소" />
                 <p>국내숙소</p>
             </a>
             <a href="${pageContext.request.contextPath}/international" class="category-box">
-                <img src="${pageContext.request.contextPath}/resources/image/hotel1.png" alt="해외숙소" />
+                <img src="${pageContext.request.contextPath}/resources/images/hotel/main/japan_hotel.jpg" alt="해외숙소" />
                 <p>해외숙소</p>
             </a>
             <a href="${pageContext.request.contextPath}/nearby" class="category-box">
-                <img src="${pageContext.request.contextPath}/resources/image/hotel1.png" alt="내주변" />
+                <img src="${pageContext.request.contextPath}/resources/images/hotel/main/around_hotel.png" alt="내주변" />
                 <p>내주변</p>
             </a>
         </div>
