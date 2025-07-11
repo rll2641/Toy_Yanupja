@@ -1,0 +1,246 @@
+/* /resources/css/index.css */
+
+/* 전체 섹션의 기본 패딩 */
+.section {
+    padding: 32px;
+}
+
+
+
+/* 카테고리 박스 컨테이너 */
+.category-boxes {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap; /* 반응형을 위해 추가 */
+}
+
+/* 개별 카테고리 박스 */
+.category-box {
+    flex: 1;
+    min-width: 200px; /* 최소 너비 지정 */
+    max-width: calc(33.33% - 11px); /* 3개씩 배열되도록 (gap 16px 고려) */
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s;
+}
+
+.category-box:hover {
+    transform: scale(1.03);
+}
+
+.category-box img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.category-box p {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* --- 이벤트 슬라이더 --- */
+.event-slider {
+    position: relative;
+    margin-top: 40px;
+    overflow: hidden; /* 필수: 슬라이더 내부 요소가 밖으로 나가지 않도록 함 */
+    max-width: 100%;
+}
+
+.event-track {
+    display: flex; /* 필수: 이미지를 가로로 나열 */
+    transition: transform 0.4s ease-in-out; /* 슬라이드 애니메이션 */
+}
+
+.event-track img {
+    width: 300px; /* 스크립트의 slideWidth (316px)와 일치하도록 명확히 설정 */
+    height: 150px;
+    margin-right: 16px; /* 스크립트의 slideWidth와 일치하도록 명확히 설정 */
+    flex-shrink: 0; /* 이미지가 줄어들지 않도록 함 */
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.event-slider button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.7);
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.event-slider .prev { left: 8px; }
+.event-slider .next { right: 8px; }
+
+
+/* --- 관심 많은 숙소 섹션 --- */
+.hot-places {
+    margin-top: 40px;
+    padding: 0 16px; /* 좌우 패딩 유지 */
+}
+
+.hot-places h2 {
+    font-size: 1.5em;
+    margin-bottom: 4px; /* 제목과 부제목 간격 조절 */
+}
+
+.hot-places p {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 12px; /* 부제목과 슬라이더 간격 조절 */
+}
+
+/* 관심 많은 숙소 슬라이더 컨테이너 */
+.hot-slider {
+    position: relative;
+    /* margin-top: 40px; 제거 (hot-places에 이미 margin-top 있음) */
+    overflow: hidden; /* 필수 */
+    max-width: 100%;
+}
+
+.hot-track {
+    display: flex;
+    gap: 1rem;
+    /* …your existing track styles… */
+}
+
+.hot-item {
+    text-align: center;
+    flex: 0 0 auto;           /* keep each item from shrinking */
+    width: 200px;              /* or whatever fixed width you like */
+}
+
+.hot-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.hot-item-title {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/* hot-slider 버튼은 통합해서 정의하거나 각각 명확히 정의 */
+/* 원본의 중복 정의된 .hot-slider button과 .hot-prev, .hot-next를 통합하여 재구성 */
+.hot-slider button { /* 모든 hot-slider 내 버튼에 공통 적용 */
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    font-size: 24px; /* 기본 폰트 사이즈 */
+    cursor: pointer;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.7); /* 기본 배경 */
+    padding: 8px 12px; /* 기본 패딩 */
+    border-radius: 50%; /* 기본 둥근 모서리 */
+}
+
+/* 화살표 모양 버튼에 대한 스타일 재정의 (더욱 투명하고, 크고, 둥글지 않게) */
+.hot-prev,
+.hot-next {
+    background: transparent; /* 배경 없애기 */
+    font-size: 2rem; /* 더 큰 폰트 사이즈 */
+    padding: 0; /* 여백 제거 */
+    border-radius: 0; /* 둥근 모서리 제거 */
+    box-shadow: none; /* 그림자 제거 */
+}
+
+.hot-prev { left: 8px; }
+.hot-next { right: 8px; }
+
+
+/* --- 많이 찾는 숙소 섹션 --- */
+.popular-slider { /* .popular-places로 섹션을 감싸는 것이 더 논리적입니다. */
+    position: relative;
+    margin-top: 40px;
+    overflow: hidden; /* 필수 */
+    max-width: 100%;
+    padding: 0 16px; /* 좌우 패딩 유지 */
+}
+
+.popular-slider h2 {
+    font-size: 1.5em;
+    margin-bottom: 4px;
+}
+
+.popular-slider p {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.popular-track {
+    display: flex; /* 필수 */
+    transition: transform 0.4s ease-in-out;
+}
+
+.popular-track img {
+    width: 300px;
+    height: 150px;
+    margin-right: 16px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+/* popular-slider 버튼도 hot-slider와 유사하게 재구성 */
+.popular-slider button { /* 모든 popular-slider 내 버튼에 공통 적용 */
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 8px 12px;
+    border-radius: 50%;
+}
+
+.popular-prev { left: 8px; }
+.popular-next { right: 8px; }
+
+/* 메인페이지에 공지사항 배너 */
+.notice-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #fff4e6;
+    padding: 12px 16px;
+    border-left: 4px solid #ffa94d;
+    border-radius: 6px;
+    margin-bottom: 24px;
+}
+
+.notice-tag {
+    background-color: #ffa94d;
+    color: white;
+    padding: 4px 8px;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.notice-text {
+    font-size: 15px;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+}

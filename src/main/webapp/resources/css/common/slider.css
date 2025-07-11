@@ -1,0 +1,274 @@
+/* ========================================
+   통합 슬라이더 스타일
+   모든 슬라이더에서 공통으로 사용되는 스타일
+======================================== */
+
+.slider-container {
+    margin: 40px 0;
+    padding: 0 20px;
+}
+
+.slider-container h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.slider-container p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.slider-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.slider-track {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+    gap: 16px;
+}
+
+.slider-item {
+    flex: 0 0 auto;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.slider-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.slider-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.slider-item:hover img {
+    transform: scale(1.05);
+}
+
+.slider-item a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.slider-item-title {
+    padding: 12px 16px;
+    background: #fff;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* 슬라이더 버튼 스타일 */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slider-btn:hover {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.slider-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.slider-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.prev-btn {
+    left: 15px;
+}
+
+.next-btn {
+    right: 15px;
+}
+
+/* 슬라이더 타입별 특별 스타일 */
+
+/* 이벤트 슬라이더 */
+.event-slider .slider-item {
+    width: 300px;
+}
+
+.event-slider .slider-item img {
+    height: 180px;
+}
+
+.event-slider .slider-item-title {
+    display: none; /* 이벤트는 제목 숨김 */
+}
+
+/* 인기 숙소 슬라이더 */
+.hot-slider .slider-item,
+.popular-slider .slider-item {
+    width: 280px;
+}
+
+.hot-slider .slider-item img,
+.popular-slider .slider-item img {
+    height: 200px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+    .slider-container {
+        padding: 0 15px;
+    }
+
+    .slider-item {
+        width: 250px !important;
+    }
+
+    .slider-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .slider-container {
+        padding: 0 10px;
+        margin: 30px 0;
+    }
+
+    .slider-container h2 {
+        font-size: 1.5rem;
+    }
+
+    .slider-item {
+        width: 220px !important;
+    }
+
+    .slider-item img {
+        height: 160px !important;
+    }
+
+    .slider-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .prev-btn {
+        left: 10px;
+    }
+
+    .next-btn {
+        right: 10px;
+    }
+
+    .slider-track {
+        gap: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .slider-item {
+        width: 180px !important;
+    }
+
+    .slider-item img {
+        height: 140px !important;
+    }
+
+    .slider-item-title {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+
+    .slider-track {
+        gap: 8px;
+    }
+}
+
+/* 터치 디바이스용 스타일 */
+@media (hover: none) {
+    .slider-item:hover {
+        transform: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .slider-item:hover img {
+        transform: none;
+    }
+
+    .slider-btn:hover {
+        background: rgba(255, 255, 255, 0.9);
+        transform: translateY(-50%);
+    }
+}
+
+/* 로딩 상태 */
+.slider-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.slider-loading::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 빈 슬라이더 상태 */
+.slider-empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    color: #666;
+    font-size: 1rem;
+}

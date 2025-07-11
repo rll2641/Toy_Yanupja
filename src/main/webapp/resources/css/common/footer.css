@@ -1,0 +1,10 @@
+/* /resources/css/footer.css */
+/* 푸터 스타일 */
+footer {
+    padding: 32px;
+    background-color: #f8f8f8;
+    text-align: center;
+    font-size: 12px;
+    color: #999;
+    margin-top: 40px; /* 슬라이더와 푸터 사이 여백 추가 */
+}

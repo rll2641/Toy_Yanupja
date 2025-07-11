@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 시스템 컬럼, 공통 매퍼 -->
+<mapper namespace="com.fastcampus.toy_yanupja.mapper.BaseMapper">
+
+    <!-- 시스템 컬럼 정의 -->
+    <sql id="Base_System_Column">
+        CREATED_AT,
+        UPDATED_AT,
+        CREATED_BY,
+        UPDATED_BY
+    </sql>
+
+    <!-- INSERT 시 값 바인딩 -->
+    <sql id="Base_System_Column_Insert">
+        #{createdAt},
+        #{updatedAt},
+        #{createdBy},
+        #{updatedBy}
+    </sql>
+
+    <!-- UPDATE 시 SET 절 -->
+    <sql id="Base_System_Column_Update">
+        UPDATED_AT = now(),
+        UPDATED_BY = #{updatedBy}
+    </sql>
+
+    <!-- 페이지네이션 공통 조건 -->
+    <sql id="Base_Pagination">
+        <if test="offset != null and limit != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </sql>
+
+</mapper>
