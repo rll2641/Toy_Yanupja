@@ -1,6 +1,7 @@
 package com.fastcampus.toy_yanupja.dto.accomm;
 
 import com.fastcampus.toy_yanupja.dto.AuditInfoDTO;
+import com.fastcampus.toy_yanupja.dto.accomm.enums.AccommodationStatus;
 import lombok.*;
 
 @Getter
@@ -14,7 +15,7 @@ public class AccommDTO {
     private Integer accommodationCategoryL2Id;
     private Integer accommodationCategoryL3Id;
     private String accommodationName;
-    private String accommodationStatus;
+    private AccommodationStatus accommodationStatus;
     private Integer clickViews;
     private String rating;
     private String provinceName;
