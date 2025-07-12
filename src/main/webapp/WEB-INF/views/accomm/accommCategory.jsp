@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
@@ -13,7 +13,7 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 <div class="category-container">
-    <a href="${pageContext.request.contextPath}/domestic/hotel" class="category-card">
+    <a href="${pageContext.request.contextPath}/domestic/search" class="category-card">
         <img src="${pageContext.request.contextPath}/resources/images/hotel/category/hotel_category.png" alt="호텔/리조트">
         <div class="category-card-title">호텔/리조트</div>
     </a>

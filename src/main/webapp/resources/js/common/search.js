@@ -47,7 +47,7 @@ class SearchManager {
         }
 
         // 검색 결과 페이지로 이동
-        const searchUrl = `${this.contextPath}/search?keyword=${encodeURIComponent(keyword)}`;
+        const searchUrl = `${this.contextPath}/domestic/search?keyword=${encodeURIComponent(keyword)}`;
         window.location.href = searchUrl;
     }
 }
