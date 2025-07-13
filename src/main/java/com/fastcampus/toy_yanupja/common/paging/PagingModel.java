@@ -1,12 +1,15 @@
-package com.fastcampus.toy_yanupja.dto.common;
+package com.fastcampus.toy_yanupja.common.paging;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.validation.constraints.Min;
 
 @Getter
 @Setter
 public class PagingModel {
 
+    @Min(value = 1, message = "페이지 번호는 1 이상이어야 합니다.")
     private Long pageIdx;
     private Integer count;
     private String orderBy;

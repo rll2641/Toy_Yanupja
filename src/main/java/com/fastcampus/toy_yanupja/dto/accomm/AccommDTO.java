@@ -24,4 +24,13 @@ public class AccommDTO {
     private Integer buildingNumber;
     private Integer buildingSubNumber;
     private AuditInfoDTO auditInfoDTO;
+
+    /* AccommSearch 검색 결과 */
+    private String accommodationImageFilePath;
+    private Integer reviewCount;
+    private Double reviewScore;
+    private String checkinTime;
+    private Integer price;
+    private Double discountRate;
+    private Integer priceFinal;
 }

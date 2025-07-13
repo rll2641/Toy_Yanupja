@@ -5,6 +5,10 @@
     border-bottom: 1px solid #eee;
     display: flex;
     justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .search-controls {
@@ -27,6 +31,7 @@
     font-size: 14px;
     transition: all 0.2s;
     white-space: nowrap;
+    min-height: 44px;
 }
 
 .control-button:hover {
@@ -40,6 +45,53 @@
     border-color: #333;
 }
 
+/* 에러 메시지 스타일 */
+.error-message {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1001;
+    max-width: 400px;
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.error-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.error-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: auto;
+    padding: 0;
+    color: #721c24;
+}
+
+.error-close:hover {
+    color: #000;
+}
+
 /* 모달 공통 스타일 */
 .modal {
     display: none;
@@ -50,6 +102,12 @@
     height: 100%;
     background: rgba(0,0,0,0.5);
     z-index: 1000;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .modal-content {
@@ -62,6 +120,18 @@
     position: relative;
     max-height: 80vh;
     overflow-y: auto;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .modal-header {
@@ -88,10 +158,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
 }
 
 .close-btn:hover {
     color: #333;
+    background: #f5f5f5;
 }
 
 /* 날짜/인원 선택 모달 */
@@ -100,6 +173,11 @@
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 20px;
+    transition: border-color 0.2s;
+}
+
+.date-section:hover {
+    border-color: #007bff;
 }
 
 .date-header {
@@ -111,19 +189,24 @@
 .date-text {
     flex: 1;
     font-weight: 500;
+    color: #333;
 }
 
 .change-btn {
     background: none;
     border: none;
-    color: #666;
+    color: #007bff;
     cursor: pointer;
     text-decoration: underline;
     font-size: 14px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s;
 }
 
 .change-btn:hover {
-    color: #333;
+    background: #f0f8ff;
+    text-decoration: none;
 }
 
 /* 캘린더 */
@@ -132,6 +215,7 @@
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 20px;
+    background: #fafafa;
 }
 
 .calendar-header {
@@ -148,10 +232,13 @@
     padding: 8px;
     font-size: 16px;
     color: #666;
+    border-radius: 6px;
+    transition: all 0.2s;
 }
 
 .nav-btn:hover {
     color: #333;
+    background: #e9ecef;
 }
 
 .month-year {
@@ -190,24 +277,35 @@
     cursor: pointer;
     border-radius: 8px;
     transition: all 0.2s;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .calendar-date:hover {
-    background: #f0f0f0;
+    background: #e3f2fd;
 }
 
 .calendar-date.selected {
-    background: #333;
+    background: #007bff;
     color: white;
+    font-weight: 600;
 }
 
 .calendar-date.range {
-    background: #f0f0f0;
+    background: #e3f2fd;
+    color: #1976d2;
 }
 
 .calendar-date.disabled {
     color: #ccc;
     cursor: not-allowed;
+    background: transparent;
+}
+
+.calendar-date.disabled:hover {
+    background: transparent;
 }
 
 /* 인원 선택 */
@@ -216,6 +314,11 @@
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 20px;
+    transition: border-color 0.2s;
+}
+
+.person-section:hover {
+    border-color: #007bff;
 }
 
 .person-header {
@@ -259,16 +362,23 @@
     align-items: center;
     justify-content: center;
     font-size: 18px;
+    font-weight: 600;
     transition: all 0.2s;
 }
 
 .counter-btn:hover {
-    border-color: #333;
+    border-color: #007bff;
+    color: #007bff;
 }
 
 .counter-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.counter-btn:disabled:hover {
+    border-color: #ddd;
+    color: #666;
 }
 
 .count {
@@ -283,6 +393,10 @@
     margin-bottom: 32px;
 }
 
+.filter-section:last-of-type {
+    margin-bottom: 24px;
+}
+
 .filter-title {
     font-size: 16px;
     font-weight: 600;
@@ -294,6 +408,9 @@
     font-size: 14px;
     color: #666;
     margin-bottom: 16px;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
 }
 
 .price-inputs {
@@ -310,20 +427,23 @@
     font-size: 14px;
     color: #666;
     margin-bottom: 6px;
+    font-weight: 500;
 }
 
 .price-input {
     width: 100%;
-    padding: 8px 12px;
+    padding: 10px 12px;
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 14px;
     box-sizing: border-box;
+    transition: border-color 0.2s;
 }
 
 .price-input:focus {
     outline: none;
-    border-color: #333;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
 .filter-options {
@@ -333,23 +453,25 @@
 }
 
 .filter-option {
-    padding: 8px 16px;
+    padding: 10px 16px;
     border: 1px solid #ddd;
     border-radius: 20px;
     background: white;
     cursor: pointer;
     font-size: 14px;
     transition: all 0.2s;
+    font-weight: 500;
 }
 
 .filter-option:hover {
-    border-color: #333;
+    border-color: #007bff;
+    background: #f0f8ff;
 }
 
 .filter-option.active {
-    background: #333;
+    background: #007bff;
     color: white;
-    border-color: #333;
+    border-color: #007bff;
 }
 
 /* 정렬 모달 */
@@ -371,22 +493,29 @@
     border-bottom: 1px solid #eee;
     cursor: pointer;
     transition: all 0.2s;
+    border-radius: 8px;
+    margin-bottom: 4px;
 }
 
 .sort-option:last-child {
     border-bottom: none;
+    margin-bottom: 0;
 }
 
 .sort-option:hover {
     background: #f8f9fa;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 .sort-option.active {
     font-weight: 600;
+    color: #007bff;
+    background: #f0f8ff;
 }
 
 .check-icon {
-    color: #333;
+    color: #007bff;
     font-weight: bold;
 }
 
@@ -406,30 +535,8 @@
 
 .apply-btn:hover {
     background: #0056b3;
-}
-
-/* 반응형 */
-@media (max-width: 768px) {
-    .search-controls {
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-
-    .control-button {
-        flex: 1;
-        min-width: 120px;
-        justify-content: center;
-    }
-
-    .modal-content {
-        margin: 20px auto;
-        width: 95%;
-    }
-
-    .price-inputs {
-        flex-direction: column;
-        gap: 10px;
-    }
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
 /* 숙소 목록 영역 */
@@ -453,39 +560,63 @@
 
 /* 로딩 스피너 */
 .loading {
-    text-align: center;
-    padding: 40px;
-    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
     color: #666;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* 숙소 카드 그리드 */
 .accommodation-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 24px;
     margin-bottom: 40px;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.accommodation-grid.loading {
+    opacity: 0.6;
+    pointer-events: none;
 }
 
 .accommodation-card {
-    border: 1px solid #ddd;
-    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
     transition: all 0.3s ease;
     background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .accommodation-card:hover {
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    transform: translateY(-2px);
-    border-color: #ccc;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    transform: translateY(-4px);
+    border-color: #007bff;
 }
 
 .card-image {
     position: relative;
     width: 100%;
-    height: 200px;
+    height: 220px;
     overflow: hidden;
 }
 
@@ -497,33 +628,39 @@
 }
 
 .accommodation-card:hover .card-image img {
-    transform: scale(1.05);
+    transform: scale(1.08);
 }
 
 /* 카드 내용 */
 .card-content {
-    padding: 16px;
+    padding: 20px;
 }
 
 .hotel-grade {
     font-size: 12px;
-    color: #666;
+    color: #6c757d;
     margin-bottom: 8px;
     font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .hotel-name {
     font-size: 18px;
     font-weight: 600;
-    margin-bottom: 8px;
-    color: #333;
-    line-height: 1.2;
+    margin-bottom: 10px;
+    color: #212529;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .hotel-location {
     font-size: 14px;
-    color: #666;
-    margin-bottom: 8px;
+    color: #6c757d;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 4px;
@@ -532,45 +669,53 @@
 .hotel-rating {
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin-bottom: 8px;
+    gap: 8px;
+    margin-bottom: 10px;
 }
 
 .rating {
     font-size: 14px;
     font-weight: 600;
-    color: #333;
+    color: #212529;
+    display: flex;
+    align-items: center;
+    gap: 2px;
 }
 
 .review-count {
-    font-size: 14px;
-    color: #666;
+    font-size: 13px;
+    color: #6c757d;
 }
 
 .hotel-time {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 12px;
+    font-size: 13px;
+    color: #6c757d;
+    margin-bottom: 16px;
+    padding: 4px 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    display: inline-block;
 }
 
 /* 가격 정보 */
 .hotel-price {
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 }
 
 .discount {
-    background: #ff4757;
+    background: #dc3545;
     color: white;
-    padding: 2px 6px;
-    border-radius: 4px;
+    padding: 3px 8px;
+    border-radius: 6px;
     font-size: 12px;
-    font-weight: 600;
-    margin-right: 6px;
+    font-weight: 700;
+    margin-right: 8px;
+    display: inline-block;
 }
 
 .original-price {
     font-size: 14px;
-    color: #999;
+    color: #6c757d;
     text-decoration: line-through;
     margin-right: 8px;
 }
@@ -578,17 +723,18 @@
 .final-price {
     display: flex;
     flex-direction: column;
-    margin-top: 4px;
+    margin-top: 6px;
 }
 
 .final-price .label {
     font-size: 12px;
-    color: #666;
+    color: #6c757d;
     margin-bottom: 2px;
+    font-weight: 500;
 }
 
 .final-price .price {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
     color: #007bff;
 }
@@ -601,25 +747,44 @@
 }
 
 .feature {
-    background: #f8f9fa;
-    color: #495057;
-    padding: 4px 8px;
+    background: #e3f2fd;
+    color: #1565c0;
+    padding: 4px 10px;
     border-radius: 12px;
-    font-size: 12px;
-    border: 1px solid #e9ecef;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid #bbdefb;
 }
 
 /* 결과 없음 */
 .no-results {
     text-align: center;
-    padding: 60px 20px;
+    padding: 80px 20px;
     grid-column: 1 / -1;
+    color: #6c757d;
 }
 
 .no-results p {
     font-size: 18px;
-    color: #666;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
+    color: #495057;
+}
+
+.retry-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.retry-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
 }
 
 /* 페이지네이션 */
@@ -633,11 +798,11 @@
 }
 
 .page-btn {
-    min-width: 40px;
-    height: 40px;
-    border: 1px solid #ddd;
+    min-width: 44px;
+    height: 44px;
+    border: 1px solid #dee2e6;
     background: white;
-    color: #333;
+    color: #495057;
     border-radius: 8px;
     cursor: pointer;
     display: flex;
@@ -648,10 +813,11 @@
     transition: all 0.2s ease;
 }
 
-.page-btn:hover {
+.page-btn:hover:not(.active):not(:disabled) {
     border-color: #007bff;
     color: #007bff;
     background: #f8f9ff;
+    transform: translateY(-1px);
 }
 
 .page-btn.active {
@@ -659,38 +825,134 @@
     color: white;
     border-color: #007bff;
     font-weight: 600;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
 }
 
 .page-btn.prev,
 .page-btn.next {
     font-weight: 600;
+    font-size: 16px;
 }
 
 .page-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    background: #f8f9fa;
+    color: #6c757d;
 }
 
 .page-btn:disabled:hover {
-    border-color: #ddd;
-    color: #333;
-    background: white;
+    border-color: #dee2e6;
+    background: #f8f9fa;
+    transform: none;
 }
 
-/* 반응형 - 숙소 목록 추가 */
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+    .accommodation-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .accommodation-results {
+        padding: 0 16px;
+    }
+}
+
 @media (max-width: 768px) {
+    .search-controls {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .control-button {
+        flex: 1;
+        min-width: 120px;
+        justify-content: center;
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+
+    .modal-content {
+        margin: 20px auto;
+        width: 95%;
+        padding: 20px;
+    }
+
+    .price-inputs {
+        flex-direction: column;
+        gap: 12px;
+    }
+
     .accommodation-grid {
         grid-template-columns: 1fr;
         gap: 16px;
     }
 
+    .card-content {
+        padding: 16px;
+    }
+
+    .hotel-name {
+        font-size: 16px;
+    }
+
+    .final-price .price {
+        font-size: 18px;
+    }
+
     .pagination {
         gap: 4px;
+        padding: 16px 0;
     }
 
     .page-btn {
-        min-width: 36px;
-        height: 36px;
-        font-size: 14px;
+        min-width: 40px;
+        height: 40px;
+        font-size: 13px;
+    }
+
+    .search-controls-container {
+        padding: 12px 16px;
     }
 }
+
+@media (max-width: 480px) {
+    .control-button {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    #datePersonText {
+        font-size: 12px;
+    }
+
+    .accommodation-results {
+        margin: 16px auto;
+        padding: 0 12px;
+    }
+
+    .card-content {
+        padding: 12px;
+    }
+
+    .hotel-name {
+        font-size: 15px;
+    }
+
+    .pagination {
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 20px;
+    }
+}
+
+/* 접근성 개선 */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+

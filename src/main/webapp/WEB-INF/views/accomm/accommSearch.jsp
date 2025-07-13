@@ -21,7 +21,7 @@
     <!-- 날짜/인원 선택 버튼 -->
     <button class="control-button" id="datePersonBtn">
       <span class="calendar-icon">📅</span>
-      <span id="datePersonText">07.11-07.12 · 2명</span>
+      <span id="datePersonText">날짜와 인원을 선택하세요</span>
     </button>
 
     <!-- 필터 버튼 -->
@@ -33,8 +33,17 @@
     <!-- 정렬 버튼 -->
     <button class="control-button" id="sortBtn">
       <span class="sort-icon">↕️</span>
-      <span id="sortText">정렬</span>
+      <span id="sortText">평점 높은 순</span>
     </button>
+  </div>
+</div>
+
+<!-- 에러 메시지 표시 영역 -->
+<div class="error-message" id="errorMessage" style="display: none;">
+  <div class="error-content">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text"></span>
+    <button class="error-close" onclick="hideErrorMessage()">&times;</button>
   </div>
 </div>
 
@@ -50,7 +59,7 @@
     <div class="date-section">
       <div class="date-header">
         <span class="calendar-icon">📅</span>
-        <span class="date-text">07.11(금)~07.12(토) · 1박</span>
+        <span class="date-text" id="dateText">날짜를 선택하세요</span>
         <button class="change-btn" onclick="showCalendar()">변경하기</button>
       </div>
     </div>
@@ -82,7 +91,7 @@
     <div class="person-section">
       <div class="person-header">
         <span class="person-icon">👥</span>
-        <span>성인 2</span>
+        <span id="personHeaderText">성인 2</span>
       </div>
       <div class="person-controls">
         <div class="person-row">
@@ -119,7 +128,7 @@
     <!-- 가격 범위 -->
     <div class="filter-section">
       <h3 class="filter-title">가격 범위</h3>
-      <div class="price-info">성인 2, 아동 0, 1박 기준</div>
+      <div class="price-info" id="priceInfo">성인 2, 아동 0, 1박 기준</div>
       <div class="price-range">
         <div class="price-inputs">
           <div class="price-input-group">
@@ -150,10 +159,10 @@
     <div class="filter-section">
       <h3 class="filter-title">숙소 유형</h3>
       <div class="filter-options">
-        <button class="filter-option" data-accommodation="hotel">호텔</button>
-        <button class="filter-option" data-accommodation="pension">독채펜션</button>
+        <button class="filter-option" data-accommodation="hotel">호텔/리조트</button>
+        <button class="filter-option" data-accommodation="pension">펜션</button>
         <button class="filter-option" data-accommodation="camping">글램핑</button>
-        <button class="filter-option" data-accommodation="residence">레지던스</button>
+        <button class="filter-option" data-accommodation="motel">모텔</button>
       </div>
     </div>
 
@@ -186,93 +195,33 @@
       <div class="sort-option" data-sort="review-many">
         <span>후기 많은 순</span>
       </div>
-      <div class="sort-option" data-sort="distance">
-        <span>거리 가까운 순</span>
-      </div>
     </div>
   </div>
 </div>
 
-<!-- 숙소 목록 영역 -->
+<!-- 숙소 목록 영역 - AJAX로 동적 렌더링 -->
 <div class="accommodation-results">
   <div class="results-header">
-    <span class="result-count" id="resultCount">총 ${accommodationPagingList.total}개의 숙소</span>
+    <span class="result-count" id="resultCount">
+      숙소를 검색하고 있습니다...
+    </span>
   </div>
 
   <!-- 로딩 스피너 -->
   <div class="loading" id="loadingSpinner" style="display: none;">
+    <div class="loading-spinner"></div>
     <span>검색 중...</span>
   </div>
 
-  <!-- 숙소 카드 그리드 (3x2) -->
+  <!-- 숙소 카드 그리드 - JavaScript에서 동적 생성 -->
   <div class="accommodation-grid" id="accommodationGrid">
-    <c:forEach var="accommodation" items="${accommodationPagingList.list}" varStatus="status">
-      <div class="accommodation-card" onclick="goToDetail('${accommodation.accommodationId}')">
-        <div class="card-image">
-          <img src="${accommodation.imageUrl}" alt="${accommodation.accommodationName}">
-        </div>
-        <div class="card-content">
-          <div class="hotel-grade">${accommodation.grade}</div>
-          <h3 class="hotel-name">${accommodation.accommodationName}</h3>
-          <div class="hotel-location">📍 ${accommodation.location}</div>
-          <div class="hotel-rating">
-            <span class="rating">⭐ ${accommodation.rating}</span>
-            <span class="review-count">(${accommodation.reviewCount})</span>
-          </div>
-          <div class="hotel-time">${accommodation.checkInTime}</div>
-          <div class="hotel-price">
-            <c:if test="${accommodation.discountRate > 0}">
-              <span class="discount">${accommodation.discountRate}%</span>
-              <span class="original-price">${accommodation.originalPrice}</span>
-            </c:if>
-            <div class="final-price">
-              <c:if test="${accommodation.discountRate > 0}">
-                <span class="label">최대할인가</span>
-              </c:if>
-              <span class="price">${accommodation.finalPrice}원~</span>
-            </div>
-          </div>
-          <div class="hotel-features">
-            <c:forEach var="feature" items="${accommodation.features}">
-              <span class="feature">${feature}</span>
-            </c:forEach>
-          </div>
-        </div>
-      </div>
-    </c:forEach>
-
-    <!-- 데이터가 없을 때 -->
-    <c:if test="${empty accommodationPagingList.list}">
-      <div class="no-results">
-        <p>조건에 맞는 숙소가 없습니다.</p>
-      </div>
-    </c:if>
+    <!-- JavaScript로 동적 생성됨 -->
   </div>
 
-  <!-- 페이지네이션 -->
-  <c:if test="${not empty accommodationPagingList.list and accommodationPagingList.total > 6}">
-    <div class="pagination" id="pagination">
-      <!-- 이전 페이지 버튼 -->
-      <c:if test="${accommodationPagingList.pageIdx > 1}">
-        <button class="page-btn prev" onclick="goToPage(${accommodationPagingList.pageIdx - 1})">&lt;</button>
-      </c:if>
-
-      <!-- 페이지 번호들 -->
-      <c:set var="startPage" value="${accommodationPagingList.pageIdx - 2 > 0 ? accommodationPagingList.pageIdx - 2 : 1}" />
-      <c:set var="totalPages" value="${(accommodationPagingList.total + 5) / 6}" />
-      <c:set var="endPage" value="${accommodationPagingList.pageIdx + 2 < totalPages ? accommodationPagingList.pageIdx + 2 : totalPages}" />
-
-      <c:forEach var="pageNum" begin="${startPage}" end="${endPage}">
-        <button class="page-btn ${pageNum eq accommodationPagingList.pageIdx ? 'active' : ''}"
-                onclick="goToPage(${pageNum})">${pageNum}</button>
-      </c:forEach>
-
-      <!-- 다음 페이지 버튼 -->
-      <c:if test="${accommodationPagingList.hasNext}">
-        <button class="page-btn next" onclick="goToPage(${accommodationPagingList.pageIdx + 1})">&gt;</button>
-      </c:if>
-    </div>
-  </c:if>
+  <!-- 페이지네이션 - JavaScript에서 동적 생성 -->
+  <div class="pagination" id="pagination">
+    <!-- JavaScript로 동적 생성됨 -->
+  </div>
 </div>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
@@ -280,6 +229,49 @@
 <!-- JavaScript -->
 <script src="${pageContext.request.contextPath}/resources/js/accomm/accommSearch.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/common/search.js"></script>
+
+<!-- 유틸리티 함수들 -->
+<script>
+  // 에러 메시지 표시 함수
+  function showErrorMessage(message) {
+    const errorElement = document.getElementById('errorMessage');
+    const errorText = errorElement.querySelector('.error-text');
+
+    errorText.textContent = message;
+    errorElement.style.display = 'block';
+
+    // 5초 후 자동 숨김
+    setTimeout(() => {
+      hideErrorMessage();
+    }, 5000);
+  }
+
+  // 에러 메시지 숨김 함수
+  function hideErrorMessage() {
+    document.getElementById('errorMessage').style.display = 'none';
+  }
+
+  // 날짜 유효성 검증 함수
+  function validateDates(startDate, endDate) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (startDate < today) {
+      throw new Error('체크인 날짜는 오늘 이후여야 합니다.');
+    }
+
+    if (endDate <= startDate) {
+      throw new Error('체크아웃 날짜는 체크인 날짜 이후여야 합니다.');
+    }
+
+    const maxDate = new Date();
+    maxDate.setFullYear(maxDate.getFullYear() + 1);
+
+    if (startDate > maxDate) {
+      throw new Error('예약은 1년 이내로만 가능합니다.');
+    }
+  }
+</script>
 
 </body>
 </html>

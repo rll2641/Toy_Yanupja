@@ -15,7 +15,5 @@ public interface BaseMapper<T, ID> {
     int deleteById(ID id);
     T selectById(ID id);
     List<T> selectAll();
-
-    List<T> selectByPage(T dto);
     long count();
 }

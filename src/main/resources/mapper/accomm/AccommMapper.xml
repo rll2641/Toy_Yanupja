@@ -75,30 +75,121 @@
         SELECT * FROM ACCOMMODATION
     </select>
 
-    <select id="selectByPage" parameterType="PageDTO" resultType="AccommDTO">
-        SELECT
-            ACCOMMODATION_ID,
-            <include refid="Accomm_Column"/>
-            <include refid="com.fastcampus.toy_yanupja.mapper.BaseMapper.Base_System_Column"/>
+    <select id="defaultSearchPage" resultType="AccommDTO">
+        SELECT *
         FROM ACCOMMODATION
+        WHERE DISTRICT_NAME LIKE '%강남%'
+        OR DISTRICT_NAME LIKE '%역삼%'
+        OR DISTRICT_NAME LIKE '%삼성%'
+    </select>
+
+    <!-- 숙소 페이지네이션 -->
+    <select id="selectByPage" parameterType="AccommSearchRequest" resultType="AccommDTO">
+        SELECT
+            a.ACCOMMODATION_ID,
+            a.ACCOMMODATION_NAME,
+            a.RATING,
+            a.DISTRICT_NAME,
+            a.ROAD_NAME,
+            a.BUILDING_NUMBER,
+            a.BUILDING_SUB_NUMBER,
+            i.ACCOMMODATION_IMAGE_FILE_PATH,
+            COUNT(DISTINCT rev.REVIEW_ID) as REVIEW_COUNT,
+            ROUND(AVG(rev.REVIEW_SCORE), 1) as REVIEW_SCORE,
+            MIN(r.CHECKIN_TIME) as CHECKIN_TIME,
+            MIN(r.PRICE) as PRICE,
+            MAX(r.DISCOUNT_RATE) as DISCOUNT_RATE,
+            MIN(r.PRICE * (1 - r.DISCOUNT_RATE)) as PRICE_FINAL
+        FROM ACCOMMODATION a
+        LEFT JOIN ACCOMMODATION_IMAGE i ON a.ACCOMMODATION_ID = i.ACCOMMODATION_ID
+        LEFT JOIN REVIEW rev ON a.ACCOMMODATION_ID = rev.ACCOMMODATION_ID
+        LEFT JOIN ROOM r ON a.ACCOMMODATION_ID = r.ACCOMMODATION_ID
+        <where>
+            a.ACCOMMODATION_STATUS = 'ACTIVE'
+
+            <!-- 초기 페이지용 -->
+            <if test="defaultArea != null and defaultArea.size() > 0">
+                AND (
+                <foreach collection="defaultArea" item="area" separator=" OR ">
+                    a.DISTRICT_NAME LIKE CONCAT('%', #{area}, '%')
+                </foreach>
+                )
+            </if>
+
+            <!-- 필터 -->
+            <if test="adultCount != null and childCount != null">
+                AND r.MAXIMUM_CAPACITY &gt;= (#{adultCount} + #{childCount})
+            </if>
+            <if test="minPrice != null">
+                AND r.PRICE * (1 - r.DISCOUNT_RATE) &gt;= #{minPrice}
+            </if>
+            <if test="maxPrice != null">
+                AND r.PRICE * (1 - r.DISCOUNT_RATE) &lt;= #{maxPrice}
+            </if>
+            <if test="rating != null and rating.size() > 0">
+                AND CAST(SUBSTRING(a.RATING, 1, 1) AS UNSIGNED) IN
+                <foreach collection="rating" item="rate" open="(" separator="," close=")">
+                    #{rate}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY
+            a.ACCOMMODATION_ID,
+            a.ACCOMMODATION_NAME,
+            a.RATING,
+            a.DISTRICT_NAME,
+            a.ROAD_NAME,
+            a.BUILDING_NUMBER,
+            a.BUILDING_SUB_NUMBER,
+            i.ACCOMMODATION_IMAGE_FILE_PATH
         <choose>
-            <when test="orderBy != null and orderBy.trim().length() > 0">
-                ORDER BY
-                    <choose>
-                        <when test="orderBy == 'name'">ACCOMMODATION_NAME</when>
-                        <when test="orderBy == 'rating'">RATING</when>
-                        <when test="orderBy == 'views'">CLICK_VIEWS</when>
-                        <otherwise>ACCOMMODATION_ID</otherwise>
-                    </choose>
-                <if test="orderDirection != null and orderDirection.trim().length() > 0">
-                    ${pageDTO.orderDirection}
-                </if>
-            </when>
-            <otherwise>
-                ORDER BY ACCOMMODATION_ID DESC
-            </otherwise>
+            <when test="pagingModel.orderBy == 'rating'">ORDER BY a.RATING DESC</when>
+            <when test="pagingModel.orderBy == 'price-low'">ORDER BY PRICE_FINAL ASC</when>
+            <when test="pagingModel.orderBy == 'price-high'">ORDER BY PRICE_FINAL DESC</when>
+            <when test="pagingModel.orderBy == 'review-good'">ORDER BY REVIEW_SCORE DESC</when>
+            <when test="pagingModel.orderBy == 'review-many'">ORDER BY REVIEW_COUNT DESC</when>
+            <otherwise>ORDER BY a.RATING DESC</otherwise>
         </choose>
-        LIMIT #{pageDTO.limit} OFFSET #{pageDTO.offset}
+        LIMIT #{pagingModel.count} OFFSET #{pagingModel.offset}
+    </select>
+
+    <!-- 페이지 개수 -->
+    <select id="selectByPageTotalCount" parameterType="AccommSearchRequest" resultType="Long">
+        SELECT
+            COUNT(DISTINCT a.ACCOMMODATION_ID)
+        FROM ACCOMMODATION a
+        LEFT JOIN ACCOMMODATION_IMAGE i ON a.ACCOMMODATION_ID = i.ACCOMMODATION_ID
+        LEFT JOIN REVIEW rev ON a.ACCOMMODATION_ID = rev.ACCOMMODATION_ID
+        LEFT JOIN ROOM r ON a.ACCOMMODATION_ID = r.ACCOMMODATION_ID
+        <where>
+            a.ACCOMMODATION_STATUS = 'ACTIVE'
+
+            <!-- 초기 페이지 -->
+            <if test="defaultArea != null and defaultArea.size() > 0">
+                AND (
+                <foreach collection="defaultArea" item="area" separator=" OR ">
+                    a.DISTRICT_NAME LIKE CONCAT('%', #{area}, '%')
+                </foreach>
+                )
+            </if>
+
+            <!-- 필터 -->
+            <if test="adultCount != null and childCount != null">
+                AND r.MAXIMUM_CAPACITY &gt;= (#{adultCount} + #{childCount})
+            </if>
+            <if test="minPrice != null">
+                AND r.PRICE * (1 - r.DISCOUNT_RATE) &gt;= #{minPrice}
+            </if>
+            <if test="maxPrice != null">
+                AND r.PRICE * (1 - r.DISCOUNT_RATE) &lt;= #{maxPrice}
+            </if>
+            <if test="rating != null and rating.size() > 0">
+                AND CAST(SUBSTRING(a.RATING, 1, 1) AS UNSIGNED) IN
+                <foreach collection="rating" item="rate" open="(" separator="," close=")">
+                    #{rate}
+                </foreach>
+            </if>
+        </where>
     </select>
 
 </mapper>

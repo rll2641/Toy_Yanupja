@@ -1,4 +1,4 @@
-package com.fastcampus.toy_yanupja.dto.common;
+package com.fastcampus.toy_yanupja.common.paging;
 
 import lombok.Getter;
 
