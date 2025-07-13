@@ -273,5 +273,9 @@
   }
 </script>
 
+<script>
+  const contextPath = '${pageContext.request.contextPath}';
+</script>
+
 </body>
 </html>

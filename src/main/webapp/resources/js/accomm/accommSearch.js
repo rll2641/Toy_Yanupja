@@ -667,7 +667,7 @@ class AccommodationSearchController {
         const cardsHtml = resultData.list.map(accommodation => `
             <div class="accommodation-card" onclick="goToDetail('${accommodation.accommodationId}')">
                 <div class="card-image">
-                    <img src="${accommodation.accommodationFilePath || '/resources/images/common/hotel_default.png'}" 
+                    <img src="${contextPath}${accommodation.accommodationFilePath || '/resources/images/common/hotel_default.png'}" 
                          alt="${accommodation.accommodationName}"
                          onerror="this.src='/resources/images/default-hotel.jpg'">
                 </div>
