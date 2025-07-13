@@ -10,7 +10,15 @@ class AccommodationSearchController {
         this.childCount = 0;
         this.currentSort = 'rating';
         this.currentPage = 1;
-        this.isInitialSearch = true;  // 초기 검색 플래그 추가
+        this.isInitialSearch = true;
+
+        // 🔧 검색 조건 상태 관리
+        this.currentSearchConditions = {
+            defaultArea: null,      // 현재 적용된 지역 조건
+            keyword: null,          // 검색 키워드
+            hasActiveSearch: false  // 활성 검색이 있는지 여부
+        };
+
         this.filters = {
             minPrice: 39900,
             maxPrice: 3300000,
@@ -22,9 +30,37 @@ class AccommodationSearchController {
         this.initializeEvents();
         this.generateCalendar();
         this.setDefaultDates();
+        this.checkUrlParameters();  // URL 파라미터 확인
+        this.performSearch();       // 초기 검색 실행
+    }
 
-        // 페이지 로드 시 초기 검색 실행 (강남/역삼/삼성 지역)
-        this.performSearch();
+    /**
+     * URL 파라미터 확인
+     */
+    checkUrlParameters() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const keyword = urlParams.get('keyword');
+
+        if (keyword) {
+            console.log('🔗 URL에서 검색어 발견:', keyword);
+
+            const searchInput = document.querySelector('#searchInput');
+            if (searchInput) {
+                searchInput.value = keyword;
+            }
+
+            this.currentSearchConditions.keyword = keyword;
+            this.currentSearchConditions.defaultArea = null;
+            this.currentSearchConditions.hasActiveSearch = true;
+
+            console.log('✅ URL 키워드로 검색 조건 설정됨');
+        } else {
+            console.log('🏠 기본 검색 - 강남/역삼/삼성 지역');
+
+            this.currentSearchConditions.defaultArea = ['강남', '역삼', '삼성'];
+            this.currentSearchConditions.keyword = null;
+            this.currentSearchConditions.hasActiveSearch = true;
+        }
     }
 
     /**
@@ -60,12 +96,16 @@ class AccommodationSearchController {
             maxPrice: this.filters.maxPrice,
             rating: this.filters.rating,
             accommType: this.filters.accommodationType,
-            // 초기 페이지용 기본 지역 조건 추가
-            defaultArea: this.isInitialSearch ? ['강남', '역삼', '삼성'] : null,
+
+            // 🔧 현재 검색 조건 적용
+            defaultArea: this.currentSearchConditions.defaultArea,
+            keyword: this.currentSearchConditions.keyword,
+
             pagingModel: {
                 orderBy: this.currentSort,
                 pageIdx: this.currentPage,
-                count: 6
+                count: 6,
+                offset: (this.currentPage - 1) * 6
             }
         };
 
@@ -197,6 +237,21 @@ class AccommodationSearchController {
 
         this.updateDateDisplay();
         this.updateMainButtonText();
+    }
+
+    /**
+     * 🔧 추가: 검색 조건을 명시적으로 유지하는 메서드
+     */
+    maintainSearchConditions() {
+        // 현재 검색 조건들을 명시적으로 보존
+        return {
+            startDate: this.selectedStartDate,
+            endDate: this.selectedEndDate,
+            adultCount: this.adultCount,
+            childCount: this.childCount,
+            filters: { ...this.filters },
+            sort: this.currentSort
+        };
     }
 
     /**
@@ -441,23 +496,23 @@ class AccommodationSearchController {
         option.appendChild(checkIcon);
 
         this.currentSort = option.dataset.sort;
-
         const sortText = option.querySelector('span:first-child').textContent;
         document.getElementById('sortText').textContent = sortText;
 
-        // 모달 닫기
         this.closeModal('sortModal');
 
-        // 정렬 변경 시 첫 페이지로 이동 후 검색
         this.currentPage = 1;
+        console.log('🔄 정렬 변경 - 검색 조건 유지하며 1페이지로 이동');
         this.performSearch();
     }
 
     /**
      * 날짜/인원 적용
      */
+    /**
+     * 🔧 수정된 필터/정렬 적용 메서드들
+     */
     applyDatePerson() {
-        // 날짜 유효성 검증
         try {
             if (this.selectedStartDate && this.selectedEndDate) {
                 this.validateDates(this.selectedStartDate, this.selectedEndDate);
@@ -469,14 +524,11 @@ class AccommodationSearchController {
             return;
         }
 
-        // 버튼 텍스트 업데이트
         this.updateMainButtonText();
-
-        // 모달 닫기
         this.closeModal('datePersonModal');
 
-        // 첫 페이지로 이동 후 검색
         this.currentPage = 1;
+        console.log('📅 날짜/인원 변경 - 검색 조건 유지하며 1페이지로 이동');
         this.performSearch();
     }
 
@@ -484,33 +536,23 @@ class AccommodationSearchController {
      * 필터 적용
      */
     applyFilter() {
-        // 가격 범위 저장
         this.filters.minPrice = parseInt(document.getElementById('minPrice').value) || 0;
         this.filters.maxPrice = parseInt(document.getElementById('maxPrice').value) || 999999999;
 
-        // 예약 유형 저장
-        const activeBookingType = document.querySelector('.filter-option.active[data-type]');
-        if (activeBookingType) {
-            this.filters.bookingType = activeBookingType.dataset.type;
-        }
-
-        // 호텔 성급 저장
         this.filters.rating = [];
         document.querySelectorAll('.filter-option.active[data-rating]').forEach(option => {
             this.filters.rating.push(option.dataset.rating);
         });
 
-        // 숙소 유형 저장
         this.filters.accommodationType = [];
         document.querySelectorAll('.filter-option.active[data-accommodation]').forEach(option => {
             this.filters.accommodationType.push(option.dataset.accommodation);
         });
 
-        // 모달 닫기
         this.closeModal('filterModal');
 
-        // 첫 페이지로 이동 후 검색
         this.currentPage = 1;
+        console.log('🔍 필터 변경 - 검색 조건 유지하며 1페이지로 이동');
         this.performSearch();
     }
 
@@ -518,13 +560,27 @@ class AccommodationSearchController {
      * 검색 실행
      */
     performSearch() {
+        // 🔧 초기 검색 시에만 기본 조건 설정 (URL 파라미터가 없는 경우에만)
+        if (this.isInitialSearch && !this.currentSearchConditions.hasActiveSearch) {
+            this.currentSearchConditions.defaultArea = ['강남', '역삼', '삼성'];
+            this.currentSearchConditions.hasActiveSearch = true;
+            console.log('🎯 초기 검색 - 기본 지역 설정:', this.currentSearchConditions.defaultArea);
+        }
+
         const payload = this.createSearchPayload();
-        console.log('검색 페이로드:', payload);
+        console.log('🔍 검색 실행 - 페이지:', this.currentPage);
+        console.log('📍 적용된 조건:', {
+            지역: this.currentSearchConditions.defaultArea,
+            키워드: this.currentSearchConditions.keyword
+        });
+        console.log('📦 검색 페이로드:', payload);
+
         this.sendSearchRequest(payload);
 
-        // 첫 검색 이후에는 초기 검색 플래그 해제
+        // 🔧 초기 검색 플래그만 해제 (검색 조건은 유지)
         if (this.isInitialSearch) {
             this.isInitialSearch = false;
+            console.log('✅ 초기 검색 완료 - 검색 조건은 계속 유지됨');
         }
     }
 
@@ -680,18 +736,80 @@ class AccommodationSearchController {
     }
 
     /**
-     * 페이지 이동
+     * 🔧 통합된 페이지 이동 메서드
      */
     goToPage(pageNum) {
+        console.log(`📄 페이지 이동: ${this.currentPage} → ${pageNum}`);
+        console.log(`🔍 현재 검색 조건:`, {
+            isInitialSearch: this.isInitialSearch,
+            // 🔧 추가: currentSearchConditions 정보
+            searchConditions: this.currentSearchConditions,
+            filters: this.filters,
+            dates: {
+                start: this.selectedStartDate,
+                end: this.selectedEndDate
+            },
+            people: {
+                adult: this.adultCount,
+                child: this.childCount
+            }
+        });
+
+        // 🔧 페이지 번호 업데이트
         this.currentPage = pageNum;
+
+        // 🔧 중요: 페이지 이동 시에는 초기 검색이 아님
+        // (하지만 기존 검색 조건은 그대로 유지해야 함)
+
+        console.log(`📍 유지되는 검색 조건:`, {
+            defaultArea: this.currentSearchConditions.defaultArea,
+            keyword: this.currentSearchConditions.keyword,
+            hasActiveSearch: this.currentSearchConditions.hasActiveSearch
+        });
+
+        // 🔧 검색 실행 (기존 조건 유지)
         this.performSearch();
     }
 
     /**
+     * 헤더 검색어 설정
+     */
+    setSearchKeyword(keyword) {
+        console.log('🔍 새 검색어 설정:', keyword);
+
+        this.currentSearchConditions.keyword = keyword;
+        this.currentSearchConditions.defaultArea = null;  // 키워드 검색 시 기본 지역 제거
+        this.currentSearchConditions.hasActiveSearch = true;
+
+        this.currentPage = 1;
+        this.updateUrl();
+        this.performSearch();
+    }
+
+    /**
+     * URL 업데이트
+     */
+    updateUrl() {
+        const url = new URL(window.location);
+
+        if (this.currentSearchConditions.keyword) {
+            url.searchParams.set('keyword', this.currentSearchConditions.keyword);
+        } else {
+            url.searchParams.delete('keyword');
+        }
+
+        window.history.replaceState({}, '', url);
+    }
+
+
+
+    /**
      * 검색 조건 초기화 후 검색
      */
+    /**
+     * 검색 조건 초기화
+     */
     resetAndSearch() {
-        // 필터 초기화
         this.filters = {
             minPrice: 39900,
             maxPrice: 3300000,
@@ -700,22 +818,37 @@ class AccommodationSearchController {
             accommodationType: []
         };
 
-        // UI 초기화
+        this.currentSearchConditions = {
+            defaultArea: ['강남', '역삼', '삼성'],
+            keyword: null,
+            hasActiveSearch: true
+        };
+
         document.getElementById('minPrice').value = 39900;
         document.getElementById('maxPrice').value = 3300000;
         document.querySelectorAll('.filter-option.active').forEach(opt => {
             opt.classList.remove('active');
         });
 
-        // 정렬 초기화
         this.currentSort = 'rating';
         document.getElementById('sortText').textContent = '평점 높은 순';
-
-        // 페이지 초기화
         this.currentPage = 1;
 
-        // 검색 실행
+        console.log('🔄 검색 조건 초기화 - 기본 지역으로 복원');
         this.performSearch();
+    }
+
+    // 🔧 기타 필요한 메서드들 (generateRequestId, createBaseRequest, etc.)
+    generateRequestId() {
+        return 'search_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    createBaseRequest() {
+        return {
+            requestId: this.generateRequestId(),
+            timestamp: new Date().toISOString(),
+            clientVersion: "1.0.0"
+        };
     }
 
     /**

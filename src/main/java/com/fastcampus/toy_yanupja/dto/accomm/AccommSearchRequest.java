@@ -16,6 +16,8 @@ public class AccommSearchRequest {
     /* 초기 페이지 숙소 */
     private List<String> defaultArea;
 
+    private String keyword;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
@@ -37,4 +39,12 @@ public class AccommSearchRequest {
     private List<String> accommType;
 
     private PagingModel pagingModel;
+
+    public Long getOffset() {
+        return pagingModel != null ? pagingModel.getOffset() : 0L;
+    }
+
+    public Long getCount() {
+        return pagingModel != null ? pagingModel.getCount() : 6L;
+    }
 }

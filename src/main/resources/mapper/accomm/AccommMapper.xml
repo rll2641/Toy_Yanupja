@@ -107,14 +107,26 @@
         <where>
             a.ACCOMMODATION_STATUS = 'ACTIVE'
 
-            <!-- 초기 페이지용 -->
-            <if test="defaultArea != null and defaultArea.size() > 0">
-                AND (
-                <foreach collection="defaultArea" item="area" separator=" OR ">
-                    a.DISTRICT_NAME LIKE CONCAT('%', #{area}, '%')
-                </foreach>
-                )
-            </if>
+            <!-- 키워드 검색 조건 추가 -->
+            <choose>
+                <when test="keyword != null and keyword.trim() != ''">
+                    AND (
+                    a.ACCOMMODATION_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    OR a.DISTRICT_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    OR a.ROAD_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    OR a.PROVINCE_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    )
+                </when>
+                <otherwise>
+                    <if test="defaultArea != null and defaultArea.size() > 0">
+                        AND (
+                        <foreach collection="defaultArea" item="area" separator=" OR ">
+                            a.DISTRICT_NAME LIKE CONCAT('%', #{area}, '%')
+                        </foreach>
+                        )
+                    </if>
+                </otherwise>
+            </choose>
 
             <!-- 필터 -->
             <if test="adultCount != null and childCount != null">
@@ -164,14 +176,26 @@
         <where>
             a.ACCOMMODATION_STATUS = 'ACTIVE'
 
-            <!-- 초기 페이지 -->
-            <if test="defaultArea != null and defaultArea.size() > 0">
-                AND (
-                <foreach collection="defaultArea" item="area" separator=" OR ">
-                    a.DISTRICT_NAME LIKE CONCAT('%', #{area}, '%')
-                </foreach>
-                )
-            </if>
+            <!-- 키워드 검색 조건 -->
+            <choose>
+                <when test="keyword != null and keyword.trim() != ''">
+                    AND (
+                    a.ACCOMMODATION_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    OR a.DISTRICT_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    OR a.ROAD_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    OR a.PROVINCE_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    )
+                </when>
+                <otherwise>
+                    <if test="defaultArea != null and defaultArea.size() > 0">
+                        AND (
+                        <foreach collection="defaultArea" item="area" separator=" OR ">
+                            a.DISTRICT_NAME LIKE CONCAT('%', #{area}, '%')
+                        </foreach>
+                        )
+                    </if>
+                </otherwise>
+            </choose>
 
             <!-- 필터 -->
             <if test="adultCount != null and childCount != null">
