@@ -30,9 +30,12 @@ public class AccommService {
         try {
             log.info("숙소 검색 중 ..");
             AccommSearchRequest searchRequest = payload.getContent();
+
+            log.info("요청 페이지: {}", searchRequest.getPagingModel().getPageIdx());
+
             List<AccommDTO> accommDTOList = mapper.selectByPage(searchRequest);
             Long totalCount = mapper.selectByPageTotalCount(searchRequest);
-            AccommPagingList accommPagingList = new AccommPagingList(totalCount, accommDTOList);
+            AccommPagingList accommPagingList = new AccommPagingList(totalCount, searchRequest.getPagingModel(),accommDTOList);
             log.info("숙소 검색 완료");
 
             return ResponseEntity.ok(ApiResponse.success(accommPagingList, "숙소 검색 완료"));
