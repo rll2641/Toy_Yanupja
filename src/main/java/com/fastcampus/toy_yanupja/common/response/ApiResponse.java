@@ -3,6 +3,10 @@ package com.fastcampus.toy_yanupja.common.response;
 import lombok.Builder;
 import lombok.Getter;
 
+/* * ApiResponse 클래스는 API 응답의 기본 구조를 정의합니다.
+ * 성공 여부, 메시지, 데이터, 에러 코드를 포함합니다.
+ * 성공 응답과 에러 응답을 생성하는 정적 메서드를 제공합니다.
+ */
 @Getter
 @Builder
 public class ApiResponse<T> {

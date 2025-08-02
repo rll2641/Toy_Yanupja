@@ -11,6 +11,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * AccommodationStatus Enum을 MyBatis에서 처리하기 위한 TypeHandler 클래스
+ * <p>
+ * AccommodationStatus Enum을 MyBatis에서 String으로 매핑하기 위해 BaseTypeHandler를 상속받아 구현합니다.
+ * 이 클래스는 PreparedStatement에 값을 설정하고, ResultSet에서 값을 조회하는 메서드를 오버라이드합니다.
+ */
 @MappedTypes(AccommodationStatus.class) /* 처리할 자바 타입 지정 */
 @MappedJdbcTypes(JdbcType.VARCHAR) /* 처리할 JDBC 타입 지정 */
 public class AccommStatusTypeHandler extends BaseTypeHandler<AccommodationStatus> {
