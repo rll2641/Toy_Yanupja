@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 숙소 관련 매퍼 -->
+<mapper namespace="com.fastcampus.toy_yanupja.mapper.accomm.AccommMapper">
+
+    <!-- PK 제외, 숙소 컬럼 -->
+    <sql id="Accomm_Column">
+        SELLER_ID,
+        ADMIN_ID,
+        ACCOMMODATION_CATEGORY_L1_ID,
+        ACCOMMODATION_CATEGORY_L2_ID,
+        ACCOMMODATION_CATEGORY_L3_ID,
+        ACCOMMODATION_NAME,
+        ACCOMMODATION_STATUS,
+        CLICK_VIEWS,
+        RATING,
+        PROVINCE_NAME,
+        DISTRICT_NAME,
+        ROAD_NAME,
+        BUILDING_NUMBER,
+        BUILDING_SUB_NUMBER,
+    </sql>
+
+    <insert id="insert" parameterType="AccommDTO">
+        INSERT INTO ACCOMMODATION (
+            <include refid="Accomm_Column"/>
+            <include refid="com.fastcampus.toy_yanupja.mapper.BaseMapper.Base_System_Column"/>)
+        VALUES (
+            #{sellerId},
+            #{adminId},
+            #{accommodationCategoryL1Id},
+            #{accommodationCategoryL2Id},
+            #{accommodationCategoryL3Id},
+            #{accommodationName},
+            #{accommodationStatus},
+            #{clickViews},
+            #{rating},
+            #{provinceName},
+            #{districtName},
+            #{roadName},
+            #{buildingNumber},
+            #{buildingSubNumber},
+            <include refid="com.fastcampus.toy_yanupja.mapper.BaseMapper.Base_System_Column_Insert"/>)
+    </insert>
+
+    <update id="update" parameterType="AccommDTO">
+        UPDATE ACCOMMODATION
+        SET
+            <set>
+                <if test="sellerId != null">SELLER_ID = #{sellerId},</if>
+                <if test="adminId != null">ADMIN_ID = #{adminId},</if>
+                <if test="accommodationName != null and accommodationName.trim().length() > 0"> ACCOMMODATION_NAME = #{accommodationName},</if>
+                <if test="accommodationStatus != null">ACCOMMODATION_STATUS = #{accommodationStatus},</if>
+                <if test="clickViews != null">CLICK_VIEWS = #{clickViews},</if>
+                <if test="rating != null">RATING = #{rating},</if>
+                <if test="provinceName != null">PROVINCE_NAME = #{provinceName},</if>
+                <if test="districtName != null">DISTRICT_NAME = #{districtName},</if>
+                <if test="roadName != null">ROAD_NAME = #{roadName},</if>
+                <if test="buildingNumber != null">BUILDING_NUMBER = #{buildingNumber},</if>
+                <if test="buildingSubNumber != null">BUILDING_SUB_NUMBER = #{buildingSubNumber}</if>
+            </set>
+        WHERE ACCOMMODATION_ID = #{accommodationId}
+    </update>
+
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM ACCOMMODATION
+        WHERE ACCOMMODATION_ID = #{accommodationId}
+    </delete>
+
+    <select id="selectById" parameterType="Long" resultType="AccommDTO">
+        SELECT * FROM ACCOMMODATION WHERE ACCOMMODATION_ID = #{accommodationId}
+    </select>
+
+    <select id="selectAll" resultType="AccommDTO">
+        SELECT * FROM ACCOMMODATION
+    </select>
+
+    <select id="defaultSearchPage" resultType="AccommDTO">
+        SELECT *
+        FROM ACCOMMODATION
+        WHERE DISTRICT_NAME LIKE '%강남%'
+        OR DISTRICT_NAME LIKE '%역삼%'
+        OR DISTRICT_NAME LIKE '%삼성%'
+    </select>
+
+    <!-- 숙소 페이지네이션 -->
+    <select id="selectByPage" parameterType="AccommSearchRequest" resultType="AccommDTO">
+        SELECT
+            a.ACCOMMODATION_ID,
+            a.ACCOMMODATION_NAME,
+            a.RATING,
+            a.DISTRICT_NAME,
+            a.ROAD_NAME,
+            a.BUILDING_NUMBER,
+            a.BUILDING_SUB_NUMBER,
+            i.ACCOMMODATION_IMAGE_FILE_PATH,
+            COUNT(DISTINCT rev.REVIEW_ID) as REVIEW_COUNT,
+            ROUND(AVG(rev.REVIEW_SCORE), 1) as REVIEW_SCORE,
+            MIN(r.CHECKIN_TIME) as CHECKIN_TIME,
+            MIN(r.PRICE) as PRICE,
+            MAX(r.DISCOUNT_RATE) as DISCOUNT_RATE,
+            MIN(r.PRICE * (1 - r.DISCOUNT_RATE)) as PRICE_FINAL
+        FROM ACCOMMODATION a
+        LEFT JOIN ACCOMMODATION_IMAGE i ON a.ACCOMMODATION_ID = i.ACCOMMODATION_ID
+        LEFT JOIN REVIEW rev ON a.ACCOMMODATION_ID = rev.ACCOMMODATION_ID
+        LEFT JOIN ROOM r ON a.ACCOMMODATION_ID = r.ACCOMMODATION_ID
+        <where>
+            a.ACCOMMODATION_STATUS = 'ACTIVE'
+
+            <!-- 키워드 검색 조건 추가 -->
+            <choose>
+                <when test="keyword != null and keyword.trim() != ''">
+                    AND (
+                    a.ACCOMMODATION_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    OR a.DISTRICT_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    OR a.ROAD_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    OR a.PROVINCE_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    )
+                </when>
+                <otherwise>
+                    <if test="defaultArea != null and defaultArea.size() > 0">
+                        AND (
+                        <foreach collection="defaultArea" item="area" separator=" OR ">
+                            a.DISTRICT_NAME LIKE CONCAT('%', #{area}, '%')
+                        </foreach>
+                        )
+                    </if>
+                </otherwise>
+            </choose>
+
+            <!-- 필터 -->
+            <if test="adultCount != null and childCount != null">
+                AND r.MAXIMUM_CAPACITY &gt;= (#{adultCount} + #{childCount})
+            </if>
+            <if test="minPrice != null">
+                AND r.PRICE * (1 - r.DISCOUNT_RATE) &gt;= #{minPrice}
+            </if>
+            <if test="maxPrice != null">
+                AND r.PRICE * (1 - r.DISCOUNT_RATE) &lt;= #{maxPrice}
+            </if>
+            <if test="rating != null and rating.size() > 0">
+                AND CAST(SUBSTRING(a.RATING, 1, 1) AS UNSIGNED) IN
+                <foreach collection="rating" item="rate" open="(" separator="," close=")">
+                    #{rate}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY
+            a.ACCOMMODATION_ID,
+            a.ACCOMMODATION_NAME,
+            a.RATING,
+            a.DISTRICT_NAME,
+            a.ROAD_NAME,
+            a.BUILDING_NUMBER,
+            a.BUILDING_SUB_NUMBER,
+            i.ACCOMMODATION_IMAGE_FILE_PATH
+        <choose>
+            <when test="pagingModel.orderBy == 'rating'">ORDER BY a.RATING DESC</when>
+            <when test="pagingModel.orderBy == 'price-low'">ORDER BY PRICE_FINAL ASC</when>
+            <when test="pagingModel.orderBy == 'price-high'">ORDER BY PRICE_FINAL DESC</when>
+            <when test="pagingModel.orderBy == 'review-good'">ORDER BY REVIEW_SCORE DESC</when>
+            <when test="pagingModel.orderBy == 'review-many'">ORDER BY REVIEW_COUNT DESC</when>
+            <otherwise>ORDER BY a.RATING DESC</otherwise>
+        </choose>
+        LIMIT #{pagingModel.count} OFFSET #{pagingModel.offset}
+    </select>
+
+    <!-- 페이지 개수 -->
+    <select id="selectByPageTotalCount" parameterType="AccommSearchRequest" resultType="Long">
+        SELECT
+            COUNT(DISTINCT a.ACCOMMODATION_ID)
+        FROM ACCOMMODATION a
+        LEFT JOIN ACCOMMODATION_IMAGE i ON a.ACCOMMODATION_ID = i.ACCOMMODATION_ID
+        LEFT JOIN REVIEW rev ON a.ACCOMMODATION_ID = rev.ACCOMMODATION_ID
+        LEFT JOIN ROOM r ON a.ACCOMMODATION_ID = r.ACCOMMODATION_ID
+        <where>
+            a.ACCOMMODATION_STATUS = 'ACTIVE'
+
+            <!-- 키워드 검색 조건 -->
+            <choose>
+                <when test="keyword != null and keyword.trim() != ''">
+                    AND (
+                    a.ACCOMMODATION_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    OR a.DISTRICT_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    OR a.ROAD_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    OR a.PROVINCE_NAME LIKE CONCAT('%', #{keyword}, '%')
+                    )
+                </when>
+                <otherwise>
+                    <if test="defaultArea != null and defaultArea.size() > 0">
+                        AND (
+                        <foreach collection="defaultArea" item="area" separator=" OR ">
+                            a.DISTRICT_NAME LIKE CONCAT('%', #{area}, '%')
+                        </foreach>
+                        )
+                    </if>
+                </otherwise>
+            </choose>
+
+            <!-- 필터 -->
+            <if test="adultCount != null and childCount != null">
+                AND r.MAXIMUM_CAPACITY &gt;= (#{adultCount} + #{childCount})
+            </if>
+            <if test="minPrice != null">
+                AND r.PRICE * (1 - r.DISCOUNT_RATE) &gt;= #{minPrice}
+            </if>
+            <if test="maxPrice != null">
+                AND r.PRICE * (1 - r.DISCOUNT_RATE) &lt;= #{maxPrice}
+            </if>
+            <if test="rating != null and rating.size() > 0">
+                AND CAST(SUBSTRING(a.RATING, 1, 1) AS UNSIGNED) IN
+                <foreach collection="rating" item="rate" open="(" separator="," close=")">
+                    #{rate}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+</mapper>

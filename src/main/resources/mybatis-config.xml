@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!-- 전역 설정 -->
+    <settings>
+        <!-- 카멜케이스 매핑 (user_name → userName) -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- 2차 캐시 사용 여부 -->
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+
+    <!-- 타입 별칭: 패키지 전체나 개별 클래스 등록 -->
+    <typeAliases>
+        <!-- 패키지 단위 스캔 -->
+        <package name="com.fastcampus.toy_yanupja.dto.accomm"/>
+        <package name="com.fastcampus.toy_yanupja.dto.common"/>
+        <!-- 또는 개별 등록 -->
+        <!-- <typeAlias alias="User" type="com.fastcampus.domain.User"/> -->
+    </typeAliases>
+
+    <!-- TypeHandler 적용 -->
+    <typeHandlers>
+        <typeHandler handler="com.fastcampus.toy_yanupja.common.handler.status.AccommStatusTypeHandler"/>
+    </typeHandlers>
+
+</configuration>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 컴포넌트 스캔 범위 지정 -->
+    <context:component-scan base-package="com.fastcampus.toy_yanupja"/>
+    <!-- DB 커넥션 및 DB 연결 관련 xml -->
+    <import resource="appServlet/datasource-context.xml"/>
+
+</beans>

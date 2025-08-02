@@ -1,0 +1,127 @@
+/* /resources/css/header.css */
+
+/* 기본 body 스타일 (전역 스타일이므로, index.css나 base.css로 옮기는 것이 더 좋지만, 현재 상황에 맞춰 header.css에 유지) */
+body {
+    margin: 0;
+    font-family: sans-serif;
+}
+
+/* 헤더 컨테이너 스타일 */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    background: linear-gradient(to right, #4a6cf7, #4fa3f7); /* 원본의 마지막 header 스타일 적용 */
+    color: white;
+    position: sticky; /* 상단 고정 */
+    top: 0;
+    border-bottom: 1px solid #ddd;
+    z-index: 1000; /* 다른 요소 위에 표시되도록 z-index 추가 */
+}
+
+/* 로고 스타일 */
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-left: 60px;
+    color: #ffffff; /* 원본의 마지막 .logo 스타일 적용 */
+    text-decoration: none;
+    cursor: pointer; /* 포인터 커서 추가 */
+}
+
+/* 검색 바 입력 필드 스타일 */
+.search-bar input {
+    width: 400px; /* 원본의 더 넓은 너비 적용 */
+    padding: 10px; /* 원본의 더 큰 패딩 적용 */
+    border-radius: 20px; /* 둥근 모서리 */
+    border: none;
+    outline: none; /* 클릭 시 아웃라인 제거 */
+}
+
+/* 헤더 오른쪽 섹션 스타일 */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 24px; /* 로그인/회원가입과 아이콘 사이 여백 */
+}
+
+/* 인증 링크 (로그인/회원가입) 그룹 스타일 */
+.auth-links {
+    display: flex;
+    gap: 12px;
+    margin-right: 20px; /* 오른쪽 아이콘 그룹과의 여백 */
+}
+
+/* 인증 링크 개별 스타일 */
+.auth-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+}
+
+/* 아이콘 링크 그룹 스타일 */
+.icon-links {
+    display: flex;
+    gap: 16px;
+}
+
+/* 아이콘 링크 개별 스타일 */
+.icon-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    font-size: 12px;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+}
+
+/* 아이콘 이미지 스타일 */
+.icon-link img {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 8px;
+}
+
+/* 공지사항 배너 스타일 */
+.notice-banner {
+    display: flex;
+    align-items: center;
+    background-color: #f5f7fa;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    gap: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* 공지 태그 스타일 */
+.notice-tag {
+    background-color: #4a6cf7;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.notice-tag:hover {
+    background-color: #3b5ed2;
+}
+
+/* 공지 텍스트 스타일 */
+.notice-text {
+    color: #333;
+    text-decoration: none;
+    flex-grow: 1; /* 남은 공간을 차지하도록 하여 텍스트가 길어져도 잘 보임 */
+    overflow: hidden; /* 넘치는 텍스트 숨김 */
+    text-overflow: ellipsis; /* 넘치는 텍스트에 ... 표시 */
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+}
+
+.notice-text:hover {
+    text-decoration: underline;
+}
